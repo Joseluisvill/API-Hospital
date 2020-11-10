@@ -7,10 +7,12 @@ package com.jose.proyectojic.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -18,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -25,13 +29,9 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "hospital")
+@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Hospital.findAll", query = "SELECT h FROM Hospital h"),
-    @NamedQuery(name = "Hospital.findById", query = "SELECT h FROM Hospital h WHERE h.id = :id"),
-    @NamedQuery(name = "Hospital.findByNombre", query = "SELECT h FROM Hospital h WHERE h.nombre = :nombre"),
-    @NamedQuery(name = "Hospital.findByProvincia", query = "SELECT h FROM Hospital h WHERE h.provincia = :provincia"),
-    @NamedQuery(name = "Hospital.findByDistrito", query = "SELECT h FROM Hospital h WHERE h.distrito = :distrito"),
-    @NamedQuery(name = "Hospital.findByCorregimiento", query = "SELECT h FROM Hospital h WHERE h.corregimiento = :corregimiento")})
+    @NamedQuery(name = "Hospital.findAll", query = "SELECT h FROM Hospital h")})
 public class Hospital implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,26 +42,26 @@ public class Hospital implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 100)
     @Column(name = "nombre")
     private String nombre;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 100)
     @Column(name = "provincia")
     private String provincia;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 100)
     @Column(name = "distrito")
     private String distrito;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 100)
     @Column(name = "corregimiento")
     private String corregimiento;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idhospital")
-    private Collection<Medicamentos> medicamentosCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idhospital",fetch = FetchType.LAZY)
+    private List<Medicamentos> medicamentosCollection;
 
     public Hospital() {
     }
@@ -118,11 +118,12 @@ public class Hospital implements Serializable {
         this.corregimiento = corregimiento;
     }
 
-    public Collection<Medicamentos> getMedicamentosCollection() {
+    @XmlTransient
+    public List<Medicamentos> getMedicamentosCollection() {
         return medicamentosCollection;
     }
 
-    public void setMedicamentosCollection(Collection<Medicamentos> medicamentosCollection) {
+    public void setMedicamentosCollection(List<Medicamentos> medicamentosCollection) {
         this.medicamentosCollection = medicamentosCollection;
     }
 
@@ -148,7 +149,7 @@ public class Hospital implements Serializable {
 
     @Override
     public String toString() {
-        return "com.jose.consumidora.controllers.Hospital[ id=" + id + " ]";
+        return "com.jose.clase12020.model.Hospital[ id=" + id + " ]";
     }
     
 }

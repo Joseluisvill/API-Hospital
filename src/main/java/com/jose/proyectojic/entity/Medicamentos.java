@@ -6,9 +6,11 @@
 package com.jose.proyectojic.entity;
 
 import java.io.Serializable;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,6 +19,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -24,11 +27,9 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "medicamentos")
+@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Medicamentos.findAll", query = "SELECT m FROM Medicamentos m"),
-    @NamedQuery(name = "Medicamentos.findById", query = "SELECT m FROM Medicamentos m WHERE m.id = :id"),
-    @NamedQuery(name = "Medicamentos.findByNombre", query = "SELECT m FROM Medicamentos m WHERE m.nombre = :nombre"),
-    @NamedQuery(name = "Medicamentos.findByCantidad", query = "SELECT m FROM Medicamentos m WHERE m.cantidad = :cantidad")})
+    @NamedQuery(name = "Medicamentos.findAll", query = "SELECT m FROM Medicamentos m")})
 public class Medicamentos implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,10 +45,17 @@ public class Medicamentos implements Serializable {
     private String nombre;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "cantidad")
-    private int cantidad;
+    @Size(min = 1, max = 100)
+    @Column(name = "Unidades")
+    private String unidades;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "Descripcion")
+    private String descripcion;
+    @JsonbTransient
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "idhospital", referencedColumnName = "id")
-    @ManyToOne(optional = false)
     private Hospital idhospital;
 
     public Medicamentos() {
@@ -57,10 +65,11 @@ public class Medicamentos implements Serializable {
         this.id = id;
     }
 
-    public Medicamentos(Integer id, String nombre, int cantidad) {
+    public Medicamentos(Integer id, String nombre, String unidades, String descripcion) {
         this.id = id;
         this.nombre = nombre;
-        this.cantidad = cantidad;
+        this.unidades = unidades;
+        this.descripcion = descripcion;
     }
 
     public Integer getId() {
@@ -79,12 +88,20 @@ public class Medicamentos implements Serializable {
         this.nombre = nombre;
     }
 
-    public int getCantidad() {
-        return cantidad;
+    public String getUnidades() {
+        return unidades;
     }
 
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
+    public void setUnidades(String unidades) {
+        this.unidades = unidades;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Hospital getIdhospital() {
@@ -117,7 +134,7 @@ public class Medicamentos implements Serializable {
 
     @Override
     public String toString() {
-        return "com.jose.consumidora.controllers.Medicamentos[ id=" + id + " ]";
+        return "com.jose.clase12020.model.Medicamentos[ id=" + id + " ]";
     }
     
 }

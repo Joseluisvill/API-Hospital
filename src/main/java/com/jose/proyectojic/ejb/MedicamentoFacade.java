@@ -34,7 +34,7 @@ public class MedicamentoFacade extends AbstractFacade<Medicamentos>{
         Medicamentos cs= new Medicamentos();
         try
         {
-            cs= (Medicamentos) em.createNamedQuery("Medicamentos.findById").setParameter("id",cadena).getSingleResult();
+            cs= (Medicamentos) em.createNativeQuery("SELECT * FROM medicamentos WHERE id= '"+cadena+"'",Medicamentos.class).getSingleResult();
         }catch(Exception e)
         {
             throw e;
